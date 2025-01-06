@@ -1,0 +1,27 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "3000:3000"
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: my_database
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s # interval - com que frequência o healthcheck é executado
+      timeout: 5s # timeout - quanto tempo esperar antes de considerar o healthcheck falhado
+      retries: 5 # retries - número de tentativas antes de considerar o container como falhado
+      start_period: 10s # start_period - tempo de espera antes de iniciar o healthcheck
+      #ou seja, o healthcheck será executado a cada 30 segundos, com um timeout de 5 segundos, 5 tentativas e um tempo de espera inicial de 10 segundos
+    # depends_on:
+    #   - xpto
+    # networks:
+    #   - external-api_default
